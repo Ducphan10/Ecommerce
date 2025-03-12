@@ -109,6 +109,8 @@ public class UserController {
 			cart.getProduct().setFormattedDiscountPrice(formatCurrency(cart.getProduct().getDiscountPrice()));  // Định dạng giá sản phẩm
 		}
 
+
+
 		// Định dạng tổng giá trị đơn hàng
 		if (carts.size() > 0) {
 			Double totalOrderPrice = carts.stream()
