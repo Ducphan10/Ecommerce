@@ -4,11 +4,10 @@ import java.math.BigDecimal;
 import java.security.Principal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 import com.ecom.model.*;
+import com.ecom.service.impl.OrderServiceImpl;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -49,6 +48,9 @@ public class UserController {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private OrderServiceImpl orderServiceImpl;
 
 
 	@GetMapping("/")
@@ -176,6 +178,47 @@ public class UserController {
 		}
 		return "/user/order";
 	}
+
+
+	@GetMapping("/productOrders")
+	public String getUserOrders(Principal p, Model model) {
+		// Lấy thông tin người dùng đã đăng nhập từ Principal
+		UserDtls user = getLoggedInUserDetails(p);
+
+		// Kiểm tra nếu người dùng không đăng nhập (nếu cần thiết)
+		if (user == null) {
+			return "redirect:/login";  // Hoặc một trang thông báo lỗi
+		}
+
+		// Lấy thông tin các đơn hàng của người dùng từ database
+		List<ProductOrder> orders = orderServiceImpl.findOrdersByUserId(user.getId());
+
+		// Lọc các sản phẩm trùng tên
+		Set<String> productNames = new HashSet<>();  // Sử dụng HashSet để tránh trùng lặp
+		List<ProductOrder> uniqueOrders = new ArrayList<>();
+
+		for (ProductOrder order : orders) {
+			String productName = order.getProduct().getTitle();  // Giả sử mỗi đơn hàng có thuộc tính sản phẩm và tên sản phẩm
+			if (!productNames.contains(productName)) {
+				productNames.add(productName);
+				uniqueOrders.add(order);  // Chỉ thêm sản phẩm chưa có trong danh sách
+			}
+		}
+
+		// Định dạng giá trị tiền của từng đơn hàng
+		for (ProductOrder order : uniqueOrders) {
+			String formattedPrice = formatCurrency(order.getPrice());
+			order.setFormattedPrice(formattedPrice);  // Giả sử bạn có một phương thức setFormattedPrice trong ProductOrder
+		}
+
+		// Thêm thông tin đơn hàng vào model để chuyển tới view
+		model.addAttribute("orders", uniqueOrders);
+
+		// Trả về tên của view (HTML file) chứa danh sách đơn hàng
+		return "/user/product_orders";
+	}
+
+
 
 
 	@PostMapping("/save-order")

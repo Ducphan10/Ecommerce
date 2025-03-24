@@ -9,12 +9,15 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.text.NumberFormat;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.text.DecimalFormat;
 
+import com.ecom.dto.request.RatingRequest;
 import com.ecom.model.*;
 import com.ecom.service.*;
+import com.ecom.service.impl.RatingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
@@ -56,6 +59,8 @@ public class HomeController {
 
 	@Autowired
 	private CartService cartService;
+	@Autowired
+	private IRatingService ratingService;
 
 
 
@@ -90,6 +95,8 @@ public class HomeController {
 	public String login() {
 		return "login";
 	}
+
+
 
 	@GetMapping("/register")
 	public String register() {
@@ -155,10 +162,17 @@ public class HomeController {
 		productById.setFormattedDiscountPrice(formatCurrency(productById.getDiscountPrice()));
 		productById.setFormattedPrice(formatCurrency(productById.getPrice()));
 
+		// Lấy danh sách ratings và sắp xếp theo ID giảm dần
+		List<Rating> ratings = ratingService.findByProductId(id);
+		ratings.sort(Comparator.comparing(Rating::getId, Comparator.reverseOrder()));
+
 		m.addAttribute("product", productById);
+		m.addAttribute("ratings", ratings);
+		m.addAttribute("ratingCount", ratingService.countRatingStar(id));
+		m.addAttribute("ratingUser", ratingService.countUser(id));
+		m.addAttribute("rating", new RatingRequest());
 		return "view_product";
 	}
-
 
 
 

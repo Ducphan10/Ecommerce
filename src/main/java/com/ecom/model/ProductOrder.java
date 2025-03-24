@@ -2,14 +2,9 @@ package com.ecom.model;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,16 +37,18 @@ public class ProductOrder {
 
 	private String status;
 
-
-
 	private String paymentType;
 
 	private String formattedPrice;  // Định dạng giá tiền
-	private String formattedTotalPrice;  // Định dạng tổng tiền
 
+	private String formattedTotalPrice;  // Định dạng tổng tiền
 
 	@OneToOne(cascade = CascadeType.ALL)
 	private OrderAddress orderAddress;
+
+	@OneToMany(mappedBy = "order")
+	private List<Rating> ratings;
+
 
 
 }

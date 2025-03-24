@@ -4,15 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 public class UserDtls {
 
@@ -50,5 +48,7 @@ public class UserDtls {
 
 	private String resetToken;
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Rating> ratings;
 
 }

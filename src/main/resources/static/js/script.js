@@ -128,12 +128,12 @@ var $orders=$("#orders");
 $orders.validate({
 		rules:{
 			firstName:{
-				required:true,
-				lettersonly:true
+
+
 			},
 			lastName:{
-				required:true,
-				lettersonly:true
+
+
 			}
 			,
 			email: {
@@ -150,8 +150,7 @@ $orders.validate({
 
 			},
 			address: {
-				required: true,
-				all: true
+
 
 			},
 

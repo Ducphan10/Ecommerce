@@ -1,6 +1,7 @@
 package com.ecom.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
@@ -22,4 +23,6 @@ public interface OrderService {
 	public Page<ProductOrder> getAllOrdersPagination(Integer pageNo,Integer pageSize);
 
 	void deleteFailOrder();
+
+	Optional<ProductOrder> findById(Integer aLong);
 }

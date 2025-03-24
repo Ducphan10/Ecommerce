@@ -1,0 +1,134 @@
+/* review.css */
+.review-section-custom-style {
+    padding: 50px 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8effa 100%); /* Giảm độ xám bên phải */
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.woocommerce-tabs {
+    background: transparent;
+}
+
+.reviews-wrapper {
+    background: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.axil-comment-area {
+    padding: 0;
+}
+
+.axil-comment-area .title {
+    font-size: 24px;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.comment {
+    border-bottom: 1px solid #ecf0f1;
+    padding: 20px 0;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.single-comment {
+    display: flex;
+    align-items: flex-start;
+}
+
+.comment-img img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+}
+
+.comment-inner {
+    flex-grow: 1;
+}
+
+.commenter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.commenter a {
+    text-decoration: none;
+    color: #34495e;
+    font-size: 16px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.commenter a:hover {
+    color: #3498db;
+}
+
+.commenter a .hover-flip-item-wrapper {
+    display: inline-block;
+}
+
+.commenter a .hover-flip-item span {
+    transition: transform 0.3s ease;
+}
+
+.commenter a:hover .hover-flip-item span {
+    transform: translateY(-5px);
+}
+
+.commenter-rating i {
+    color: #f1c40f;
+    font-size: 14px;
+    margin-left: 3px;
+    margin-right: 3px; /* Khoảng cách giữa các ngôi sao đã được điều chỉnh trước đó */
+}
+
+.comment-text p {
+    font-size: 14px;
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .reviews-wrapper {
+        padding: 15px;
+    }
+
+    .comment-img img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .commenter a {
+        font-size: 14px;
+    }
+
+    .comment-text p {
+        font-size: 13px;
+    }
+
+    .commenter-rating i {
+        font-size: 12px;
+        margin-right: 1px;
+    }
+}

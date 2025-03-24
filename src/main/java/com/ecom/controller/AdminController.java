@@ -338,25 +338,64 @@ public class AdminController {
 		return "redirect:/admin/users?type="+type;
 	}
 
-	@GetMapping("/orders")
-	public String getAllOrders(Model m, @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
-			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
-//		List<ProductOrder> allOrders = orderService.getAllOrders();
-//		m.addAttribute("orders", allOrders);
+//	@GetMapping("/orders")
+//	public String getAllOrders(Model m, @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+//			@RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+////		List<ProductOrder> allOrders = orderService.getAllOrders();
+////		m.addAttribute("orders", allOrders);
+////		m.addAttribute("srch", false);
+//
+//		Page<ProductOrder> page = orderService.getAllOrdersPagination(pageNo, pageSize);
+//		m.addAttribute("orders", page.getContent());
 //		m.addAttribute("srch", false);
+//
+//		m.addAttribute("pageNo", page.getNumber());
+//		m.addAttribute("pageSize", pageSize);
+//		m.addAttribute("totalElements", page.getTotalElements());
+//		m.addAttribute("totalPages", page.getTotalPages());
+//		m.addAttribute("isFirst", page.isFirst());
+//		m.addAttribute("isLast", page.isLast());
+//
+//		return "/admin/orders";
+//	}
 
-		Page<ProductOrder> page = orderService.getAllOrdersPagination(pageNo, pageSize);
-		m.addAttribute("orders", page.getContent());
-		m.addAttribute("srch", false);
+@GetMapping("/orders")
+public String getAllOrders(Model m, @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+						   @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
 
-		m.addAttribute("pageNo", page.getNumber());
-		m.addAttribute("pageSize", pageSize);
-		m.addAttribute("totalElements", page.getTotalElements());
-		m.addAttribute("totalPages", page.getTotalPages());
-		m.addAttribute("isFirst", page.isFirst());
-		m.addAttribute("isLast", page.isLast());
+	Page<ProductOrder> page = orderService.getAllOrdersPagination(pageNo, pageSize);
 
-		return "/admin/orders";
+	// Lặp qua danh sách các đơn hàng và định dạng giá trị tiền
+	page.getContent().forEach(order -> {
+		// Định dạng giá đơn lẻ
+		double price = order.getPrice();
+		String formattedPrice = formatCurrenc(price);
+		order.setFormattedPrice(formattedPrice);
+
+		// Tính toán tổng tiền và định dạng
+		double totalPrice = order.getQuantity() * price; // Tính tổng tiền dựa trên số lượng và giá
+		String formattedTotalPrice = formatCurrenc(totalPrice);
+		order.setFormattedTotalPrice(formattedTotalPrice); // Đặt giá trị tổng đã định dạng vào đối tượng
+	});
+
+	m.addAttribute("orders", page.getContent());
+	m.addAttribute("srch", false);
+
+	m.addAttribute("pageNo", page.getNumber());
+	m.addAttribute("pageSize", pageSize);
+	m.addAttribute("totalElements", page.getTotalElements());
+	m.addAttribute("totalPages", page.getTotalPages());
+	m.addAttribute("isFirst", page.isFirst());
+	m.addAttribute("isLast", page.isLast());
+
+	return "/admin/orders";
+}
+
+	// Phương thức định dạng tiền
+	private String formatCurrenc(double amount) {
+		// Đảm bảo định dạng số tiền với dấu phân cách hàng nghìn và thập phân
+		DecimalFormat formatter = new DecimalFormat("#,###.##"); // Định dạng hai chữ số thập phân
+		return formatter.format(amount) + " VND"; // Trả về chuỗi với đơn vị tiền tệ
 	}
 
 	@PostMapping("/update-order-status")

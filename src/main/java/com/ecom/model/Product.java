@@ -39,27 +39,30 @@ public class Product {
 	
 	private Boolean isActive;
 
-
 	private String formattedDiscountPrice; // Thêm trường này
+
 	private String formattedPrice;
 
+	@OneToMany(mappedBy = "product")
+	private List<Rating> ratings;
 
 
+//	// Getter và Setter
+//	public String getFormattedDiscountPrice() {
+//		return formattedDiscountPrice;
+//	}
+//
+//	public void setFormattedDiscountPrice(String formattedDiscountPrice) {
+//		this.formattedDiscountPrice = formattedDiscountPrice;
+//	}
+//
+//	public String getFormattedPrice() {
+//		return formattedPrice;
+//	}
+//
+//	public void setFormattedPrice(String formattedPrice) {
+//		this.formattedPrice = formattedPrice;
+//	}
 
-	// Getter và Setter
-	public String getFormattedDiscountPrice() {
-		return formattedDiscountPrice;
-	}
 
-	public void setFormattedDiscountPrice(String formattedDiscountPrice) {
-		this.formattedDiscountPrice = formattedDiscountPrice;
-	}
-
-	public String getFormattedPrice() {
-		return formattedPrice;
-	}
-
-	public void setFormattedPrice(String formattedPrice) {
-		this.formattedPrice = formattedPrice;
-	}
 }

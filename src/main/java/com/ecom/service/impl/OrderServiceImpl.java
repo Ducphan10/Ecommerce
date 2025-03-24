@@ -108,10 +108,18 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
+	public Optional<ProductOrder> findById(Integer aLong) {
+		return  orderRepository.findById(aLong);
+	}
+
+	@Override
 	public ProductOrder getOrdersByOrderId(String orderId) {
 		return orderRepository.findByOrderId(orderId);
 	}
 
 
+	public List<ProductOrder> findOrdersByUserId(Integer userId) {
+		return orderRepository.findByUserId(userId);
+	}
 
 }

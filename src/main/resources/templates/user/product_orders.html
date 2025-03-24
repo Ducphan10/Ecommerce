@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Insert title here</title>
+</head>
+<body>
+<section>
+  <div class="container mt-5 p-5">
+    <div class="row">
+      <p class="text-center fs-3">Product Orders</p>
+      <th:block th:if="${session.succMsg}">
+        <p class="text-success fw-bold text-center">[[${session.succMsg}]]</p>
+        <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+      </th:block>
+
+      <th:block th:if="${session.errorMsg}">
+        <p class="text-danger fw-bold text-center">[[${session.errorMsg}]]</p>
+        <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+      </th:block>
+
+      <div class="col-md-12">
+        <table class="table table-bordered card-sh">
+          <thead>
+          <tr>
+            <th scope="col">Product Name</th>
+            <th scope="col">Image</th>
+            <th scope="col">Price</th>
+            <th scope="col">Review</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="order : ${orders}">
+            <td>[[${order.product.title}]]</td>
+            <td><img th:src="@{'/img/product_img/' + ${order.product.image}}" alt="Product Image" width="100"></td>
+            <td th:text="${order.formattedPrice}"></td>
+
+            <td>
+              <a th:href="@{'/user/review?productId=' + ${order.product.id} + '&orderId=' + ${order.id}}"
+                 class="btn btn-sm btn-primary">
+                Review
+              </a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

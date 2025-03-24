@@ -1,163 +1,133 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-	th:replace="~{base::layout(~{::section})}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" th:replace="~{base::layout(~{::section})}">
 <head>
-<meta charset="ISO-8859-1">
-<title>Insert title here</title>
+	<meta charset="ISO-8859-1">
+	<title>Insert title here</title>
+	<!-- CSS cho toàn b? trang ho?c chi ti?t s?n ph?m -->
+	<link rel="stylesheet" href="/css/bootstrap.min.css"> <!-- N?u c?n Bootstrap -->
+	<link rel="stylesheet" href="/css/product.css"> <!-- CSS riêng cho chi ti?t s?n ph?m -->
 </head>
 <body>
-	<section>
-		<div class="container card-sh"
-			style="margin-top: 70px; margin-bottom: 100px">
-
-			<div class="col-md-12 p-5">
-				<div class="row">
-					<th:block th:if="${session.succMsg}">
-						<p class="text-success alert alert-success text-center" role="alert">[[${session.succMsg}]]</p>
-						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
-					</th:block>
-
-					<th:block th:if="${session.errorMsg}">
-						<p class="text-danger text-center  alert alert-danger">[[${session.errorMsg}]]</p>
-						<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
-
-					</th:block>
-					<div class="col-md-6 text-end">
-<!--						<img alt="" src="/img/product_img/laptop.jpg" width="330px"-->
-<!--							height="400px">-->
-
-						<img th:src="@{'/img/product_img/' + ${product.image}}" width="330px" height="400px" alt="Product Image">
-
-					</div>
-
-					<div class="col-md-6">
-
-						<p class="fs-3">[[${product.title}]]</p>
-						<p>
-							<span class="fw-bold">Description : </span><br>[[${product.description}]]
-						</p>
-						<p>
-							<span class="fw-bold"> Product Details: </span> <br> Status
-							:
-							<th:block th:if="${product.stock>0}">
-								<span class="badge bg-success">Available</span>
-							</th:block>
-
-							<th:block th:unless="${product.stock>0}">
-								<span class="badge bg-warning">out of stock</span>
-							</th:block>
-
-
-							<br> Category: [[${product.category}]]<br> Policy : 7
-							Days Replacement & Return
-						</p>
-						<p class="fs-5 fw-bold">
-							Price :&nbsp;
-							[[${product.formattedDiscountPrice}]] VND
-							<span class="fs-6 text-decoration-line-through text-secondary">[[${product.formattedPrice}]]</span>
-							<span class="fs-6 text-success">[[${product.discount}]]%
-        off</span>
-						</p>
-
-
-						<div class="row">
-							<div class="col-md-4 text-success text-center p-2">
-								<i class="fas fa-money-bill-wave fa-2x"></i>
-								<p>Cash On Delivery</p>
-							</div>
-							<div class="col-md-4 text-danger text-center p-2">
-								<i class="fas fa-undo-alt fa-2x"></i>
-								<p>Return Available</p>
-							</div>
-							<div class="col-md-4 text-primary text-center p-2">
-								<i class="fas fa-truck-moving fa-2x"></i>
-								<p>Free Shipping</p>
-							</div>
-						</div>
-
+<section>
+	<div class="container card-sh" style="margin-top: 70px; margin-bottom: 100px">
+		<div class="col-md-12 p-5">
+			<div class="row">
+				<!-- Ph?n chi ti?t s?n ph?m gi? nguyên -->
+				<th:block th:if="${session.succMsg}">
+					<p class="text-success alert alert-success text-center" role="alert">[[${session.succMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+				<th:block th:if="${session.errorMsg}">
+					<p class="text-danger text-center alert alert-danger">[[${session.errorMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+				<div class="col-md-6 text-end">
+					<img th:src="@{'/img/product_img/' + ${product.image}}" width="330px" height="400px" alt="Product Image">
+				</div>
+				<div class="col-md-6">
+					<p class="fs-3">[[${product.title}]]</p>
+					<p><span class="fw-bold">Description : </span><br>[[${product.description}]]</p>
+					<p>
+						<span class="fw-bold"> Product Details: </span> <br> Status :
 						<th:block th:if="${product.stock>0}">
-							<th:block th:if="${user==null}">
-								<a href="/signin" class="btn btn-danger col-md-12">Add To
-									Cart</a>
-							</th:block>
-
-							<th:block th:unless="${user==null}">
-								<a
-									th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}"
-									class="btn btn-danger col-md-12">Add To Cart</a>
-							</th:block>
-
+							<span class="badge bg-success">Available</span>
 						</th:block>
-
 						<th:block th:unless="${product.stock>0}">
-							<a href="#" class="btn text-white btn-warning col-md-12">Out
-								of Stock</a>
+							<span class="badge bg-warning">out of stock</span>
 						</th:block>
-
+						<br> Category: [[${product.category}]]<br> Policy : 7 Days Replacement & Return
+					</p>
+					<p class="fs-5 fw-bold">
+						Price : [[${product.formattedDiscountPrice}]] VND
+						<span class="fs-6 text-decoration-line-through text-secondary">[[${product.formattedPrice}]]</span>
+						<span class="fs-6 text-success">[[${product.discount}]]% off</span>
+					</p>
+					<div class="row">
+						<div class="col-md-4 text-success text-center p-2">
+							<i class="fas fa-money-bill-wave fa-2x"></i>
+							<p>Cash On Delivery</p>
+						</div>
+						<div class="col-md-4 text-danger text-center p-2">
+							<i class="fas fa-undo-alt fa-2x"></i>
+							<p>Return Available</p>
+						</div>
+						<div class="col-md-4 text-primary text-center p-2">
+							<i class="fas fa-truck-moving fa-2x"></i>
+							<p>Free Shipping</p>
+						</div>
 					</div>
+					<th:block th:if="${product.stock>0}">
+						<th:block th:if="${user==null}">
+							<a href="/signin" class="btn btn-danger col-md-12">Add To Cart</a>
+						</th:block>
+						<th:block th:unless="${user==null}">
+							<a th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}" class="btn btn-danger col-md-12">Add To Cart</a>
+						</th:block>
+					</th:block>
+					<th:block th:unless="${product.stock>0}">
+						<a href="#" class="btn text-white btn-warning col-md-12">Out of Stock</a>
+					</th:block>
 				</div>
 			</div>
 		</div>
+	</div>
 
-	</section>
-
-<!--	<section>-->
-<!--		<div class="container card-sh" style="margin-top: 70px; margin-bottom: 100px">-->
-<!--			&lt;!&ndash; Ph?n ?ánh giá s?n ph?m &ndash;&gt;-->
-<!--			<div class="col-md-12 mt-4">-->
-<!--				<h4>Customer Reviews</h4>-->
-
-<!--				&lt;!&ndash; Hi?n th? thông báo l?i n?u có &ndash;&gt;-->
-<!--				<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>-->
-
-<!--				&lt;!&ndash; ?ánh giá (Rating) &ndash;&gt;-->
-<!--				<div>-->
-<!--					<form th:action="@{/product/{productId}/review(productId=${product.id})}" method="post">-->
-<!--						<div class="form-group">-->
-<!--							<label for="rating">Rating (1-5 stars):</label>-->
-<!--							<input type="number" id="rating" name="rating" class="form-control" min="1" max="5" required>-->
-<!--						</div>-->
-<!--						<div class="form-group">-->
-<!--							<label for="comment">Your Comment:</label>-->
-<!--							<textarea id="comment" name="comment" class="form-control" rows="4" required></textarea>-->
-<!--						</div>-->
-<!--						<button type="submit" class="btn btn-primary mt-3">Submit Review</button>-->
-<!--					</form>-->
-<!--				</div>-->
-
-<!--				&lt;!&ndash; Li?t kê các ?ánh giá hi?n t?i &ndash;&gt;-->
-<!--				<div th:each="review : ${product.reviews}">-->
-<!--					<div class="review-item">-->
-<!--						<p><strong th:text="${review.user.username}"></strong> - <span th:text="${review.rating}"></span>/5 stars</p>-->
-<!--						<p th:text="${review.comment}"></p>-->
-<!--						<p><small>Posted on: <span th:text="${review.createdAt}"></span></small></p>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-
-<!--			&lt;!&ndash; Ph?n bình lu?n cho ?ánh giá &ndash;&gt;-->
-<!--			<div class="col-md-12 mt-4">-->
-<!--				<h5>Comments on Reviews</h5>-->
-
-<!--				<div th:each="review : ${product.reviews}">-->
-<!--					<form th:action="@{/review/{reviewId}/comment(reviewId=${review.id})}" method="post">-->
-<!--						<div class="form-group">-->
-<!--							<label for="commentContent">Comment:</label>-->
-<!--							<textarea id="commentContent" name="content" class="form-control" rows="3" required></textarea>-->
-<!--						</div>-->
-<!--						<button type="submit" class="btn btn-secondary mt-3">Submit Comment</button>-->
-<!--					</form>-->
-
-<!--					&lt;!&ndash; Li?t kê các bình lu?n c?a m?i ?ánh giá &ndash;&gt;-->
-<!--					<div th:each="comment : ${review.comments}" th:if="${review.comments != null}">-->
-<!--						<p><strong th:text="${comment.user.username}"></strong>: <span th:text="${comment.content}"></span></p>-->
-<!--						<p><small>Posted on: <span th:text="${comment.createdAt}"></span></small></p>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</div>-->
-<!--		</div>-->
-<!--	</section>-->
-
-
+    <!-- Ph?n review -->
+    <div class="review-section-custom-style">
+        <!-- Chèn CSS riêng cho ph?n review -->
+        <link rel="stylesheet" href="/css/review.css">
+        <link rel="stylesheet" href="/css/fontawesome.min.css"> <!-- N?u c?n FontAwesome -->
+        <div class="woocommerce-tabs wc-tabs-wrapper bg-vista-white">
+            <div class="container">
+                <div class="reviews-wrapper">
+                    <div class="row">
+                        <div class="col-lg-6 mb--40">
+                            <div class="axil-comment-area pro-desc-commnet-area">
+                                <h5 class="title" th:text="${ratingUser} + ' Review for this product'"></h5>
+                                <ul class="comment-list">
+                                    <li class="comment" th:each="rating : ${ratings}">
+                                        <div class="comment-body">
+                                            <div class="single-comment">
+                                                <div class="comment-img">
+                                                    <img alt="" src="/img/ngdungtr.jpg" style="width: 50px">
+                                                </div>
+                                                <div class="comment-inner">
+                                                    <h6 class="commenter">
+                                                        <a class="hover-flip-item-wrapper" href="#">
+                                                        <span class="hover-flip-item">
+                                                            <span data-text="Cameron Williamson" th:text="${rating.getUser().getName()}"></span>
+                                                        </span>
+                                                        </a>
+                                                        <span class="commenter-rating rating-four-star">
+                                                        <th:block th:with="star=${rating.getStar()}">
+                                                            <th:block th:if="${star > 0}">
+                                                                <th:block th:each="i : ${#numbers.sequence(1, star)}">
+                                                                    <i class="fas fa-star"></i>
+                                                                </th:block>
+                                                            </th:block>
+                                                            <th:block th:if="${star < 5}">
+                                                                <th:block th:each="i : ${#numbers.sequence(1, (5 - star))}">
+                                                                    <i class="far fa-star"></i>
+                                                                </th:block>
+                                                            </th:block>
+                                                        </th:block>
+                                                    </span>
+                                                    </h6>
+                                                    <div class="comment-text">
+                                                        <p th:text="${rating.getContent()}"></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 </body>
 </html>

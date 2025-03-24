@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
+<head>
+  <meta charset="ISO-8859-1">
+  <title>Insert title here</title>
+
+
+
+
+</head>
+<body>
+<section>
+
+  <div class="container card-sh"
+       style="margin-top: 70px; margin-bottom: 100px">
+
+    <div class="col-md-12 p-5">
+      <div class="row">
+        <th:block th:if="${session.succMsg}">
+          <p class="text-success alert alert-success text-center" role="alert">[[${session.succMsg}]]</p>
+          <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+        </th:block>
+
+        <th:block th:if="${session.errorMsg}">
+          <p class="text-danger text-center  alert alert-danger">[[${session.errorMsg}]]</p>
+          <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+
+        </th:block>
+        <div class="col-md-6 text-end">
+          <!--						<img alt="" src="/img/product_img/laptop.jpg" width="330px"-->
+          <!--							height="400px">-->
+
+          <img th:src="@{'/img/product_img/' + ${product.image}}" width="330px" height="400px" alt="Product Image">
+
+        </div>
+
+        <div class="col-md-6">
+
+          <p class="fs-3">[[${product.title}]]</p>
+          <p>
+            <span class="fw-bold">Description : </span><br>[[${product.description}]]
+          </p>
+          <p>
+            <span class="fw-bold"> Product Details: </span> <br> Status
+            :
+            <th:block th:if="${product.stock>0}">
+              <span class="badge bg-success">Available</span>
+            </th:block>
+
+            <th:block th:unless="${product.stock>0}">
+              <span class="badge bg-warning">out of stock</span>
+            </th:block>
+
+
+            <br> Category: [[${product.category}]]<br> Policy : 7
+            Days Replacement & Return
+          </p>
+          <p class="fs-5 fw-bold">
+            Price :&nbsp;
+            [[${product.formattedDiscountPrice}]] VND
+            <span class="fs-6 text-decoration-line-through text-secondary">[[${product.formattedPrice}]]</span>
+            <span class="fs-6 text-success">[[${product.discount}]]%
+        off</span>
+          </p>
+
+
+          <div class="row">
+            <div class="col-md-4 text-success text-center p-2">
+              <i class="fas fa-money-bill-wave fa-2x"></i>
+              <p>Cash On Delivery</p>
+            </div>
+            <div class="col-md-4 text-danger text-center p-2">
+              <i class="fas fa-undo-alt fa-2x"></i>
+              <p>Return Available</p>
+            </div>
+            <div class="col-md-4 text-primary text-center p-2">
+              <i class="fas fa-truck-moving fa-2x"></i>
+              <p>Free Shipping</p>
+            </div>
+          </div>
+
+          <th:block th:if="${product.stock>0}">
+            <th:block th:if="${user==null}">
+              <a href="/signin" class="btn btn-danger col-md-12">Add To
+                Cart</a>
+            </th:block>
+
+            <th:block th:unless="${user==null}">
+              <a
+                      th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}"
+                      class="btn btn-danger col-md-12">Add To Cart</a>
+            </th:block>
+
+          </th:block>
+
+          <th:block th:unless="${product.stock>0}">
+            <a href="#" class="btn text-white btn-warning col-md-12">Out
+              of Stock</a>
+          </th:block>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- Review Section -->
+  <div class="review-section">
+    <link rel="stylesheet" href="/css/review2.css">
+
+    <!-- Add a Review Section -->
+    <div class="container">
+      <div class="review-form">
+        <h5 class="form-title">Add a Review</h5>
+        <p class="form-note">Your email address will not be published. Required fields are marked *</p>
+        <form th:action="@{/user/reviews/{productId}/{orderId}(productId=${product.id}, orderId=${orderId})}" method="post" th:object="${rating}">
+          <div class="form-group">
+            <label>Your Rating <span class="required">*</span></label>
+            <div class="rating-stars">
+              <i class="far fa-star" data-value="1" id="st1"></i>
+              <i class="far fa-star" data-value="2" id="st2"></i>
+              <i class="far fa-star" data-value="3" id="st3"></i>
+              <i class="far fa-star" data-value="4" id="st4"></i>
+              <i class="far fa-star" data-value="5" id="st5"></i>
+            </div>
+            <input type="hidden" name="ratingValue" id="ratingValue" th:field="*{star}"/>
+          </div>
+          <div class="form-group">
+            <label>Other Notes (optional)</label>
+            <textarea placeholder="Your Comment" th:field="*{content}"></textarea>
+          </div>
+          <button type="submit" class="submit-btn">Submit Comment</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="container">
+      <div class="review-list">
+        <h5 class="review-title">Reviews</h5>
+        <p class="review-count" th:text="${ratingUser} + ' Review for this product'"></p>
+        <ul class="reviews">
+          <th:block th:each="rating : ${ratings}">
+            <li class="review-item">
+              <div class="review-header">
+                <img src="/img/ngdungtr.jpg" alt="User Avatar" class="review-avatar">
+                <div class="review-info">
+                  <h6 class="reviewer-name" th:text="${rating.getUser().getName()}"></h6>
+                  <div class="review-stars">
+                    <th:block th:with="star=${rating.getStar()}">
+                      <th:block th:if="${star > 0}">
+                        <th:block th:each="i : ${#numbers.sequence(1, star)}">
+                          <i class="fas fa-star"></i>
+                        </th:block>
+                      </th:block>
+                      <th:block th:if="${star < 5}">
+                        <th:block th:each="i : ${#numbers.sequence(1, (5 - star))}">
+                          <i class="far fa-star"></i>
+                        </th:block>
+                      </th:block>
+                    </th:block>
+                  </div>
+                </div>
+              </div>
+              <p class="review-content" th:text="${rating.getContent()}"></p>
+            </li>
+          </th:block>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- woocommerce-tabs -->
+
+  <!-- Modernizer JS -->
+  <div th:insert="~{/user/fragments/script::script}"></div>
+  <!--T?o s? sao-->
+  <script>
+    $(document).ready(function() {
+      // T?o tr??ng ?n l?u giá tr? rating
+      const ratingValueInput = $("#ratingValue");
+
+      // Gán s? ki?n click cho t?t c? các sao
+      $(".fa-star").click(function() {
+        // L?y ID c?a ngôi sao ???c click
+        const starId = $(this).attr("id");
+        // L?y s? sao t? ID (st1 -> 1, st2 -> 2, ...)
+        const rating = starId.replace("st", "");
+
+        // C?p nh?t giá tr? vào tr??ng ?n
+        ratingValueInput.val(rating);
+
+        // ??t l?i t?t c? các sao v? màu vàng m?c ??nh
+        $(".fa-star").css("color", "#ffc107"); // Màu vàng (ho?c mã màu b?n mu?n)
+
+        // Tô màu xanh cho các sao t? 1 ??n giá tr? rating
+        for (let i = 1; i <= rating; i++) {
+          $("#st" + i).css("color", "#007bff"); // Màu xanh (ho?c màu b?n ch?n)
+        }
+      });
+    });
+
+
+  </script>
+
+</section>
+</body>
+</html>
