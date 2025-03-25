@@ -28,10 +28,6 @@ public class UserDtls {
 
 	private String city;
 
-	private String state;
-
-	private String pincode;
-
 	private String password;
 
 	private String profileImage;

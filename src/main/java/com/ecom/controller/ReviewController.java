@@ -95,42 +95,6 @@ public class ReviewController {
     }
 
 
-//    @PostMapping("/{productId}/{orderId}")
-//    public String reviews(@Valid @ModelAttribute("rating") RatingRequest ratingRequest,
-//                          @PathVariable Integer productId, HttpSession session,
-//                          @PathVariable Integer orderId,
-//                          RedirectAttributes redirectAttributes) {
-//        if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
-//            UserDtls user = (UserDtls) session.getAttribute("user");
-//            ratingRequest.setProductId(productId);
-//            ratingRequest.setUserId(user.getId());
-//            ratingRequest.setOrderId(orderId);
-//            ProductOrder order = orderService.findById(orderId).get();
-//
-////            System.out.println(order.getStatus());
-////            if (order.getStatus() != OrderStatus.DELIVERED && order.getStatus() != OrderStatus.COMPLETED) {
-////                String msg = "Order status not delivered";
-////                redirectAttributes.addFlashAttribute("msg", msg);
-////                return "redirect:/user/reviews/product-detail/"+productId+"/"+orderId;
-////            }
-////            else
-//                if(ratingService.checkOrderFirst(productId,user.getId())){
-//                if (!ratingService.insert(ratingRequest)){
-//                    String msg = "Not found user/product";
-//                    redirectAttributes.addFlashAttribute("msg", msg);
-//                    return "redirect:/user/reviews/product-detail/"+productId+"/"+orderId;
-//                }
-//            }
-//
-//            else {
-//                String msg = "You need to buy first";
-//                redirectAttributes.addFlashAttribute("msg", msg);
-//                return "redirect:/user/reviews/product-detail/"+productId+"/"+orderId;
-//            }
-//        }
-//            return "redirect:/user/orders/detail?id=" + orderId;
-//        }
-
 
 @PostMapping("/user/reviews/{productId}/{orderId}")
 public String reviews(@Valid @ModelAttribute("rating") RatingRequest ratingRequest,

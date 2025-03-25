@@ -12,7 +12,7 @@
 	<div class="container card-sh" style="margin-top: 70px; margin-bottom: 100px">
 		<div class="col-md-12 p-5">
 			<div class="row">
-				<!-- Ph?n chi ti?t s?n ph?m gi? nguyên -->
+				<!-- Ph?n thông báo -->
 				<th:block th:if="${session.succMsg}">
 					<p class="text-success alert alert-success text-center" role="alert">[[${session.succMsg}]]</p>
 					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
@@ -21,28 +21,42 @@
 					<p class="text-danger text-center alert alert-danger">[[${session.errorMsg}]]</p>
 					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
 				</th:block>
-				<div class="col-md-6 text-end">
-					<img th:src="@{'/img/product_img/' + ${product.image}}" width="330px" height="400px" alt="Product Image">
+
+				<!-- ?nh s?n ph?m -->
+				<div class="col-md-6 text-center">
+					<div class="product-image-wrapper">
+						<img th:src="@{'/img/product_img/' + ${product.image}}"
+							 class="img-fluid rounded shadow-sm"
+							 alt="Product Image"
+							 style="max-width: 400px; height: 370px; object-fit: cover;">
+					</div>
 				</div>
-				<div class="col-md-6">
-					<p class="fs-3">[[${product.title}]]</p>
-					<p><span class="fw-bold">Description : </span><br>[[${product.description}]]</p>
-					<p>
-						<span class="fw-bold"> Product Details: </span> <br> Status :
+
+				<!-- Chi ti?t s?n ph?m -->
+				<div class="col-md-6 product-details">
+					<h1 class="product-title fs-3 fw-bold mb-3">[[${product.title}]]</h1>
+					<p class="description">
+						<span class="fw-bold">Description : </span><br>[[${product.description}]]
+					</p>
+					<p class="details">
+						<span class="fw-bold">Product Details: </span><br>
+						Status :
 						<th:block th:if="${product.stock>0}">
 							<span class="badge bg-success">Available</span>
 						</th:block>
 						<th:block th:unless="${product.stock>0}">
 							<span class="badge bg-warning">out of stock</span>
 						</th:block>
-						<br> Category: [[${product.category}]]<br> Policy : 7 Days Replacement & Return
+						<br>Category: [[${product.category}]]<br>Policy : 7 Days Replacement & Return
 					</p>
-					<p class="fs-5 fw-bold">
+					<p class="price fs-5 fw-bold mb-4">
 						Price : [[${product.formattedDiscountPrice}]] VND
 						<span class="fs-6 text-decoration-line-through text-secondary">[[${product.formattedPrice}]]</span>
 						<span class="fs-6 text-success">[[${product.discount}]]% off</span>
 					</p>
-					<div class="row">
+
+					<!-- Icon d?ch v? -->
+					<div class="row service-icons mb-4">
 						<div class="col-md-4 text-success text-center p-2">
 							<i class="fas fa-money-bill-wave fa-2x"></i>
 							<p>Cash On Delivery</p>
@@ -56,21 +70,153 @@
 							<p>Free Shipping</p>
 						</div>
 					</div>
+
+					<!-- Nút hành ??ng -->
 					<th:block th:if="${product.stock>0}">
 						<th:block th:if="${user==null}">
-							<a href="/signin" class="btn btn-danger col-md-12">Add To Cart</a>
+							<a href="/signin" class="btn btn-danger btn-custom col-md-12">Add To Cart</a>
 						</th:block>
 						<th:block th:unless="${user==null}">
-							<a th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}" class="btn btn-danger col-md-12">Add To Cart</a>
+							<a th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}"
+							   class="btn btn-danger btn-custom col-md-12">Add To Cart</a>
 						</th:block>
 					</th:block>
 					<th:block th:unless="${product.stock>0}">
-						<a href="#" class="btn text-white btn-warning col-md-12">Out of Stock</a>
+						<a href="#" class="btn text-white btn-warning btn-custom col-md-12">Out of Stock</a>
 					</th:block>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<style>
+		.card-sh {
+			background-color: #fff;
+			border-radius: 15px;
+			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+			padding: 20px;
+			transition: box-shadow 0.3s ease;
+		}
+
+		.card-sh:hover {
+			box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+		}
+
+		.product-image-wrapper {
+			background-color: #f8f9fa;
+			padding: 20px;
+			border-radius: 10px;
+			display: inline-block;
+			transition: transform 0.3s ease;
+		}
+
+		.product-image-wrapper:hover {
+			transform: scale(1.02);
+		}
+
+		.product-details {
+			padding-left: 20px;
+		}
+
+		.product-title {
+			color: #2c3e50;
+			border-bottom: 2px solid #3498db;
+			padding-bottom: 10px;
+			transition: color 0.3s ease;
+		}
+
+		.description, .details {
+			color: #555;
+			line-height: 1.6;
+			font-size: 1rem;
+		}
+
+		.price {
+
+		}
+
+		.price .text-success {
+			font-weight: bold;
+			background-color: #ecf9f2;
+			padding: 2px 8px;
+			border-radius: 5px;
+		}
+
+		.service-icons i {
+			margin-bottom: 10px;
+			transition: transform 0.3s ease, color 0.3s ease;
+		}
+
+		.service-icons p {
+			font-size: 0.9rem;
+			margin: 0;
+			font-weight: 500;
+		}
+
+		.service-icons .col-md-4:hover i {
+			transform: scale(1.2);
+		}
+
+		.btn-custom {
+			border-radius: 8px;
+			padding: 12px;
+			font-size: 1.1rem;
+			font-weight: bold;
+			transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		.btn-danger.btn-custom:hover {
+			background-color: #c0392b;
+			transform: translateY(-3px);
+			box-shadow: 0 5px 15px rgba(192, 57, 43, 0.4);
+		}
+
+		.btn-warning.btn-custom:hover {
+			background-color: #e67e22;
+			transform: translateY(-3px);
+			box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+		}
+
+		@media (max-width: 768px) {
+			.product-details {
+				padding-left: 0;
+				margin-top: 20px;
+			}
+
+			.product-image-wrapper img {
+				max-width: 300px;
+				max-height: 350px;
+			}
+
+			.product-title {
+				font-size: 1.5rem;
+			}
+
+			.btn-custom {
+				font-size: 1rem;
+				padding: 10px;
+			}
+		}
+
+		@media (max-width: 576px) {
+			.card-sh {
+				padding: 15px;
+			}
+
+			.product-image-wrapper img {
+				max-width: 250px;
+				max-height: 300px;
+			}
+
+			.service-icons .col-md-4 {
+				margin-bottom: 15px;
+			}
+
+			.price {
+				font-size: 1.2rem;
+			}
+		}
+	</style>
 
     <!-- Ph?n review -->
     <div class="review-section-custom-style">
