@@ -3,7 +3,7 @@
 	  th:replace="~{base::layout(~{::section})}">
 <head>
 	<meta charset="ISO-8859-1">
-	<title>Insert title here</title>
+	<title>Ecom.vn</title>
 	<style>
 		/* Slider */
 		.carousel-caption {
@@ -159,7 +159,7 @@
 	<div class="container-fluid py-5" style="background: linear-gradient(135deg, #fafcff 0%, #e6ebf5 100%);">
 		<h2 class="text-center mb-5 fw-bold text-uppercase" style="color: #2c3e50;">Featured Categories</h2>
 		<div class="row justify-content-center">
-			<div class="col-md-3 col-sm-6 col-6 mb-4" th:each="c:${category}">
+			<div class="col-md-3 col-sm-6 col-6 mb-4" th:each="c, stat : ${category}" th:if="${stat.count <= 4}">
 				<div class="card category-card shadow-sm h-100 border-0">
 					<div class="card-body text-center p-4">
 						<div class="image-wrapper mb-3">

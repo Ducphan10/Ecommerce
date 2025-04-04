@@ -163,7 +163,7 @@ public class UserController {
 		if (carts.size() > 0) {
 			// Lấy giá trị đơn hàng và tính tổng giá trị đơn hàng
 			Double orderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
-			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice() + 250000 ;
+			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice()  ;
 
 			// Định dạng giá trị tiền
 			String formattedOrderPrice = formatCurrency(orderPrice);
