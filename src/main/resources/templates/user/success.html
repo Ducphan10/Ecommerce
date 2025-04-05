@@ -9,6 +9,14 @@
 	<section>
 		<div class="container mt-5 p-5">
 			<div class="row">
+				<th:block th:if="${session.succMsg}">
+					<p class="text-success alert alert-success text-center" role="alert">[[${session.succMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+				<th:block th:if="${session.errorMsg}">
+					<p class="text-danger text-center alert alert-danger">[[${session.errorMsg}]]</p>
+					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
 				<div class="col-md-6 offset-md-3 text-center">
 					<i class="fa-solid fa-circle-check fa-5x text-success"></i>
 					<p class="fs-3">Product Ordered Successfully</p>

@@ -161,15 +161,13 @@ public class UserController {
 		m.addAttribute("carts", carts);
 
 		if (carts.size() > 0) {
-			// Lấy giá trị đơn hàng và tính tổng giá trị đơn hàng
 			Double orderPrice = carts.get(carts.size() - 1).getTotalOrderPrice();
 			Double totalOrderPrice = carts.get(carts.size() - 1).getTotalOrderPrice()  ;
 
-			// Định dạng giá trị tiền
 			String formattedOrderPrice = formatCurrency(orderPrice);
 			String formattedTotalOrderPrice = formatCurrency(totalOrderPrice);
 
-			// Thêm các giá trị đã định dạng vào Model
+
 			m.addAttribute("orderPrice", formattedOrderPrice);
 			m.addAttribute("totalOrderPrice", formattedTotalOrderPrice);
 			m.addAttribute("totalPriceToPayment", totalOrderPrice);
@@ -182,35 +180,32 @@ public class UserController {
 
 	@GetMapping("/productOrders")
 	public String getUserOrders(Principal p, Model model) {
-		// Lấy thông tin người dùng đã đăng nhập từ Principal
+
 		UserDtls user = getLoggedInUserDetails(p);
 
-		// Kiểm tra nếu người dùng không đăng nhập (nếu cần thiết)
 		if (user == null) {
-			return "redirect:/login";  // Hoặc một trang thông báo lỗi
+			return "redirect:/login";
 		}
 
 		// Lấy thông tin các đơn hàng của người dùng từ database
 		List<ProductOrder> orders = orderServiceImpl.findOrdersByUserId(user.getId());
 
-		// Lọc các sản phẩm trùng tên
-		Set<String> productNames = new HashSet<>();  // Sử dụng HashSet để tránh trùng lặp
+		Set<String> productNames = new HashSet<>();
 		List<ProductOrder> uniqueOrders = new ArrayList<>();
 
 		for (ProductOrder order : orders) {
-			String productName = order.getProduct().getTitle();  // Giả sử mỗi đơn hàng có thuộc tính sản phẩm và tên sản phẩm
+			String productName = order.getProduct().getTitle();
 			if (!productNames.contains(productName)) {
 				productNames.add(productName);
-				uniqueOrders.add(order);  // Chỉ thêm sản phẩm chưa có trong danh sách
+				uniqueOrders.add(order);
 			}
 		}
 
 		// Định dạng giá trị tiền của từng đơn hàng
 		for (ProductOrder order : uniqueOrders) {
 			String formattedPrice = formatCurrency(order.getPrice());
-			order.setFormattedPrice(formattedPrice);  // Giả sử bạn có một phương thức setFormattedPrice trong ProductOrder
+			order.setFormattedPrice(formattedPrice);
 		}
-
 		// Thêm thông tin đơn hàng vào model để chuyển tới view
 		model.addAttribute("orders", uniqueOrders);
 

@@ -41,41 +41,31 @@ public class ReviewController {
 
     @GetMapping("/user/review")
     public String productDetail(Model model, @RequestParam Integer productId, @RequestParam Integer orderId, Principal p) {
-        // Lấy thông tin người dùng đăng nhập
         UserDtls user = getLoggedInUserDetails(p);
         if (user == null) {
-            return "redirect:/login";  // Nếu không tìm thấy người dùng, chuyển hướng về trang đăng nhập
+            return "redirect:/login";
         }
+        Integer userId = user.getId();
 
-        Integer userId = user.getId();  // Lấy userId từ UserDtls
-
-        // Lấy thông tin sản phẩm
         Product product = productService.getProductById(productId);
         if (product == null) {
-            return "redirect:/product-list";  // Redirect đến trang danh sách sản phẩm nếu sản phẩm không tồn tại
+            return "redirect:/product-list";
         }
 
-        // Lấy danh sách ratings và sắp xếp theo ID giảm dần
         List<Rating> ratings = ratingService.findByProductId(productId);
         if (ratings != null && !ratings.isEmpty()) {
             ratings.sort(Comparator.comparing(Rating::getId, Comparator.reverseOrder()));
         } else {
-            ratings = Collections.emptyList(); // Trả về danh sách rỗng nếu không có đánh giá
+            ratings = Collections.emptyList();
         }
-
-        // Đếm số sao trong ratings
         int ratingCount = ratingService.countRatingStar(productId);
 
-        // Đếm số người dùng đã đánh giá sản phẩm
         int ratingUser = ratingService.countUser(productId);
 
-        // Kiểm tra xem người dùng đã đặt hàng sản phẩm chưa
         boolean hasOrdered = ratingService.checkOrderFirst(productId, userId);
 
-        // Lấy số lượng sản phẩm trong giỏ hàng
         Integer countCart = cartService.getCountCart(user.getId());
 
-        // Thêm các thuộc tính vào model
         model.addAttribute("countCart", countCart);
         model.addAttribute("product", product);
         model.addAttribute("ratings", ratings);
@@ -86,7 +76,6 @@ public class ReviewController {
         model.addAttribute("hasOrdered", hasOrdered);
         model.addAttribute("user", user);
 
-        // Trả về view
         return "user/review";  // Tệp user/review.html trong thư mục templates
     }
     private UserDtls getLoggedInUserDetails(Principal p) {
@@ -102,9 +91,9 @@ public String reviews(@Valid @ModelAttribute("rating") RatingRequest ratingReque
                       @PathVariable Integer orderId,
                       RedirectAttributes redirectAttributes) {
     if (!SecurityContextHolder.getContext().getAuthentication().getName().equals("anonymousUser")) {
-        UserDtls user = getLoggedInUserDetails(p);  // Sử dụng findByEmail thay vì findByUsername
+        UserDtls user = getLoggedInUserDetails(p);
         if (user == null) {
-            return "redirect:/login";  // Nếu không tìm thấy người dùng, chuyển hướng về trang đăng nhập
+            return "redirect:/login";
         }
         model.addAttribute("user", user);
         ratingRequest.setProductId(productId);
