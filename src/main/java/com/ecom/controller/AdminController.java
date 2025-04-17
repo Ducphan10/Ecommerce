@@ -534,4 +534,9 @@ public String getAllOrders(Model m, @RequestParam(name = "pageNo", defaultValue 
 		return "redirect:/admin/profile";
 	}
 
+	@GetMapping("/revenue-stats")
+	public String showRevenueStats() {
+		return "admin/revenue-stats";
+	}
+
 }

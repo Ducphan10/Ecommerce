@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -98,8 +99,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Page<ProductOrder> getAllOrdersPagination(Integer pageNo, Integer pageSize) {
 		Pageable pageable = PageRequest.of(pageNo, pageSize);
-		return orderRepository.findAll(pageable);
-
+		return orderRepository.findAllByOrderByOrderDateDesc(pageable);
 	}
 
 	@Override
@@ -119,7 +119,11 @@ public class OrderServiceImpl implements OrderService {
 
 
 	public List<ProductOrder> findOrdersByUserId(Integer userId) {
-		return orderRepository.findByUserId(userId);
+		List<ProductOrder> orders = orderRepository.findByUserId(userId);
+		// Filter out orders with inactive products
+		return orders.stream()
+				.filter(order -> order.getProduct().getIsActive())
+				.collect(Collectors.toList());
 	}
 
 }

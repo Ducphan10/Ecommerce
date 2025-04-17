@@ -105,12 +105,12 @@ public String reviews(@Valid @ModelAttribute("rating") RatingRequest ratingReque
             if (!ratingService.insert(ratingRequest)) {
                 String msg = "Not found user/product";
                 redirectAttributes.addFlashAttribute("msg", msg);
-                return "redirect:/user/reviews/product-detail/" + productId + "/" + orderId;
+                return "redirect:/user/review?productId=" + productId + "&orderId=" + orderId;
             }
         } else {
-            String msg = "You need to buy first";
+            String msg = "You need to buy and receive the product (status: Delivered) before you can review";
             redirectAttributes.addFlashAttribute("msg", msg);
-            return "redirect:/user/reviews/product-detail/" + productId + "/" + orderId;
+            return "redirect:/user/review?productId=" + productId + "&orderId=" + orderId;
         }
     }
     return "redirect:/product/" + productId;

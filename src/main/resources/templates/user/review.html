@@ -7,10 +7,10 @@
 </head>
 <body>
 <section>
-  <div class="container card-sh" style="margin-top: 70px; margin-bottom: 100px">
+  <div class="container card-sh shadow-lg" style="margin-top: 70px; margin-bottom: 100px; background-color: white; border-radius: 10px;">
     <div class="col-md-12 p-5">
       <div class="row">
-        <!-- Th�ng b�o th�nh c�ng/l?i -->
+        <!-- Thông báo thành công/lỗi -->
         <th:block th:if="${session.succMsg}">
           <p class="text-success alert alert-success text-center" role="alert">[[${session.succMsg}]]</p>
           <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
@@ -20,18 +20,18 @@
           <th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
         </th:block>
 
-        <!-- ?nh s?n ph?m -->
+        <!-- Hiển thị sản phẩm -->
         <div class="col-md-6 text-center">
-          <div class="product-image-wrapper">
+          <div class="product-image-wrapper p-3 bg-white rounded">
             <img th:src="@{'/img/product_img/' + ${product.image}}"
-                 class="img-fluid rounded shadow-sm"
+                 class="img-fluid rounded"
                  alt="Product Image"
                  style="max-width: 400px; height: 370px; object-fit: cover;">
           </div>
         </div>
 
-        <!-- Chi ti?t s?n ph?m -->
-        <div class="col-md-6 product-details">
+        <!-- Chi tiết sản phẩm -->
+        <div class="col-md-6 product-details p-4 bg-white rounded">
           <h1 class="product-title fs-3 fw-bold mb-3">[[${product.title}]]</h1>
           <p class="description">
             <span class="fw-bold">Description:</span><br>[[${product.description}]]
@@ -53,7 +53,7 @@
             <span class="fs-6 text-success">Sale [[${product.discount}]]%</span>
           </p>
 
-          <!-- Icon d?ch v? -->
+          <!-- Icon dịch vụ -->
           <div class="row service-icons mb-4">
             <div class="col-md-4 text-success text-center p-2">
               <i class="fas fa-money-bill-wave fa-2x"></i>
@@ -69,21 +69,19 @@
             </div>
           </div>
 
-          <!-- N�t h�nh ??ng -->
+          <!-- Nút hành động -->
           <th:block th:if="${product.stock>0}">
             <th:block th:if="${user==null}">
-              <a href="/signin" class="btn btn-danger btn-custom col-md-12">Th�m v�o gi? h�ng</a>
+              <a href="/signin" class="btn btn-danger btn-custom col-md-12">Thêm vào giỏ hàng</a>
             </th:block>
           </th:block>
           <th:block th:unless="${product.stock>0}">
-            <a href="#" class="btn text-white btn-warning btn-custom col-md-12">H?t h�ng</a>
+            <a href="#" class="btn text-white btn-warning btn-custom col-md-12">Hết hàng</a>
           </th:block>
         </div>
       </div>
     </div>
   </div>
-
-
 
   <!-- Review Section -->
   <div class="review-section">
@@ -94,24 +92,36 @@
       <div class="review-form">
         <h5 class="form-title">Add a Review</h5>
         <p class="form-note">Your email address will not be published. Required fields are marked *</p>
-        <form th:action="@{/user/reviews/{productId}/{orderId}(productId=${product.id}, orderId=${orderId})}" method="post" th:object="${rating}">
-          <div class="form-group">
-            <label>Your Rating <span class="required">*</span></label>
-            <div class="rating-stars">
-              <i class="far fa-star" data-value="1" id="st1"></i>
-              <i class="far fa-star" data-value="2" id="st2"></i>
-              <i class="far fa-star" data-value="3" id="st3"></i>
-              <i class="far fa-star" data-value="4" id="st4"></i>
-              <i class="far fa-star" data-value="5" id="st5"></i>
+        
+        <!-- Thông báo khi chưa đủ điều kiện bình luận -->
+        <th:block th:unless="${hasOrdered}">
+          <div class="alert alert-warning" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            You cannot review this product yet. Please wait until your order is marked as "Delivered" by the admin.
+          </div>
+        </th:block>
+
+        <!-- Form bình luận chỉ hiển thị khi đã đủ điều kiện -->
+        <th:block th:if="${hasOrdered}">
+          <form th:action="@{/user/reviews/{productId}/{orderId}(productId=${product.id}, orderId=${orderId})}" method="post" th:object="${rating}">
+            <div class="form-group">
+              <label>Your Rating <span class="required">*</span></label>
+              <div class="rating-stars">
+                <i class="far fa-star" data-value="1" id="st1"></i>
+                <i class="far fa-star" data-value="2" id="st2"></i>
+                <i class="far fa-star" data-value="3" id="st3"></i>
+                <i class="far fa-star" data-value="4" id="st4"></i>
+                <i class="far fa-star" data-value="5" id="st5"></i>
+              </div>
+              <input type="hidden" name="ratingValue" id="ratingValue" th:field="*{star}"/>
             </div>
-            <input type="hidden" name="ratingValue" id="ratingValue" th:field="*{star}"/>
-          </div>
-          <div class="form-group">
-            <label>Other Notes (optional)</label>
-            <textarea placeholder="Your Comment" th:field="*{content}"></textarea>
-          </div>
-          <button type="submit" class="submit-btn">Submit Comment</button>
-        </form>
+            <div class="form-group">
+              <label>Other Notes (optional)</label>
+              <textarea placeholder="Your Comment" th:field="*{content}"></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Submit Comment</button>
+          </form>
+        </th:block>
       </div>
     </div>
 
@@ -155,28 +165,28 @@
 
   <!-- Modernizer JS -->
   <div th:insert="~{/user/fragments/script::script}"></div>
-  <!--T?o s? sao-->
+  <!--Tạo số sao-->
   <script>
     $(document).ready(function() {
-      // T?o tr??ng ?n l?u gi� tr? rating
+      // Tạo trường nội lưu giá trị rating
       const ratingValueInput = $("#ratingValue");
 
-      // G�n s? ki?n click cho t?t c? c�c sao
+      // Gắn sự kiện click cho tất cả các sao
       $(".fa-star").click(function() {
-        // L?y ID c?a ng�i sao ???c click
+        // Lấy ID của người sao được click
         const starId = $(this).attr("id");
-        // L?y s? sao t? ID (st1 -> 1, st2 -> 2, ...)
+        // Lấy số sao từ ID (st1 -> 1, st2 -> 2, ...)
         const rating = starId.replace("st", "");
 
-        // C?p nh?t gi� tr? v�o tr??ng ?n
+        // Cập nhật giá trị vào trường nội
         ratingValueInput.val(rating);
 
-        // ??t l?i t?t c? c�c sao v? m�u v�ng m?c ??nh
-        $(".fa-star").css("color", "#ffc107"); // M�u v�ng (ho?c m� m�u b?n mu?n)
+        // Đặt lại tất cả các sao về màu vàng mặc định
+        $(".fa-star").css("color", "#ffc107"); // Màu vàng (hoặc màu bạn muốn)
 
-        // T� m�u xanh cho c�c sao t? 1 ??n gi� tr? rating
+        // Tô màu xanh cho các sao từ 1 đến giá trị rating
         for (let i = 1; i <= rating; i++) {
-          $("#st" + i).css("color", "#007bff"); // M�u xanh (ho?c m�u b?n ch?n)
+          $("#st" + i).css("color", "#007bff"); // Màu xanh (hoặc màu bạn chọn)
         }
       });
     });

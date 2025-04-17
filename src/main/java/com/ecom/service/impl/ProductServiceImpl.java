@@ -17,7 +17,9 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ecom.model.Product;
+import com.ecom.model.ProductOrder;
 import com.ecom.repository.ProductRepository;
+import com.ecom.repository.ProductOrderRepository;
 import com.ecom.service.ProductService;
 
 @Service
@@ -25,6 +27,9 @@ public class ProductServiceImpl implements ProductService {
 
 	@Autowired
 	private ProductRepository productRepository;
+
+	@Autowired
+	private ProductOrderRepository productOrderRepository;
 
 	@Override
 	public Product saveProduct(Product product) {
@@ -47,7 +52,13 @@ public class ProductServiceImpl implements ProductService {
 		Product product = productRepository.findById(id).orElse(null);
 
 		if (!ObjectUtils.isEmpty(product)) {
-			productRepository.delete(product);
+			List<ProductOrder> orders = productOrderRepository.findByProductId(id);
+			if (orders != null && !orders.isEmpty()) {
+				product.setIsActive(false);
+				productRepository.save(product);
+			} else {
+				productRepository.delete(product);
+			}
 			return true;
 		}
 		return false;

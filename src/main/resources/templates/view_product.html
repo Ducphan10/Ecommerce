@@ -3,16 +3,16 @@
 <head>
 	<meta charset="ISO-8859-1">
 	<title>Insert title here</title>
-	<!-- CSS cho toàn b? trang ho?c chi ti?t s?n ph?m -->
+	<!-- CSS cho toï¿½n b? trang ho?c chi ti?t s?n ph?m -->
 	<link rel="stylesheet" href="/css/bootstrap.min.css"> <!-- N?u c?n Bootstrap -->
-	<link rel="stylesheet" href="/css/product.css"> <!-- CSS riêng cho chi ti?t s?n ph?m -->
+	<link rel="stylesheet" href="/css/product.css"> <!-- CSS riï¿½ng cho chi ti?t s?n ph?m -->
 </head>
 <body>
 <section>
 	<div class="container card-sh" style="margin-top: 70px; margin-bottom: 100px">
 		<div class="col-md-12 p-5">
 			<div class="row">
-				<!-- Ph?n thông báo -->
+				<!-- Ph?n thï¿½ng bï¿½o -->
 				<th:block th:if="${session.succMsg}">
 					<p class="text-success alert alert-success text-center" role="alert">[[${session.succMsg}]]</p>
 					<th:block th:text="${@commnServiceImpl.removeSessionMessage()}"></th:block>
@@ -71,7 +71,7 @@
 						</div>
 					</div>
 
-					<!-- Nút hành ??ng -->
+					<!-- Nï¿½t hï¿½nh ??ng -->
 					<th:block th:if="${product.stock>0}">
 						<th:block th:if="${user==null}">
 							<a href="/signin" class="btn btn-danger btn-custom col-md-12">Add To Cart</a>
@@ -93,13 +93,13 @@
 		.card-sh {
 			background-color: #fff;
 			border-radius: 15px;
-			box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+			box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
 			padding: 20px;
 			transition: box-shadow 0.3s ease;
 		}
 
 		.card-sh:hover {
-			box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
 		}
 
 		.product-image-wrapper {
@@ -220,7 +220,7 @@
 
     <!-- Ph?n review -->
     <div class="review-section-custom-style">
-        <!-- Chèn CSS riêng cho ph?n review -->
+        <!-- Chï¿½n CSS riï¿½ng cho ph?n review -->
         <link rel="stylesheet" href="/css/review.css">
         <link rel="stylesheet" href="/css/fontawesome.min.css"> <!-- N?u c?n FontAwesome -->
         <div class="woocommerce-tabs wc-tabs-wrapper bg-vista-white">

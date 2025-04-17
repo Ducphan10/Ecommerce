@@ -44,6 +44,9 @@ public class Product {
 	private String formattedPrice;
 
 	@OneToMany(mappedBy = "product")
+	private List<ProductOrder> productOrders;
+
+	@OneToMany(mappedBy = "product")
 	private List<Rating> ratings;
 
 

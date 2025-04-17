@@ -4,8 +4,10 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Insert title here</title>
+
 </head>
 <body>
+
 	<section>
 		<div class="container-fluid bg-primary p-5 mt-5 ">
 			<div class="row">
@@ -47,38 +49,55 @@
 				<div class="col-md-10">
 					<div class="card shadow-sm p-3 mb-5 bg-body-tertiary rounded">
 						<div class="card-body">
-							<p class="fs-3 text-center">Products</p>
-							<div class="row">
-
+							<div class="section-header text-center mb-5">
+								<h2 class="fw-bold text-uppercase" style="color: #2c3e50; position: relative; display: inline-block; margin-bottom: 20px; margin-top: -20px; ">
+									Products
+									<div class="title-underline" style="width: 80px; height: 2px; background: linear-gradient(90deg, #3498db, #2ecc71); margin: 5px auto;"></div>
+								</h2>
+								<p class="text-muted" style="max-width: 600px; margin: 0 auto; font-size: 0.9rem; margin-top: -10px;">Discover our amazing collection of products</p>
+							</div>
+							<div class="row justify-content-center g-4">
 								<th:block th:if="${productsSize >0}">
-									<div class="col-md-3" th:each="p:${products}">
-										<div class="card">
-											<div class="card-body ">
-												<img alt="" th:src="@{'/img/product_img/'+${p.image}}"
-													width="100%" height="150px">
-												<p class="fs-5 text-center">[[${p.title}]]</p>
-												<div class="row text-center">
-													<p class="fs-6 fw-bold">
-														<span>[[${p.formattedDiscountPrice}]] VND</span> <br>
-														<span class="text-decoration-line-through text-secondary">
-        													Sale [[${p.formattedPrice}]]
-														</span>
-														<span class="fs-6 text-success">[[${p.discount}]]% off</span>
-													</p>
+									<div class="col-md-3 col-sm-6 col-12" th:each="p:${products}">
+										<div class="card product-card h-100 border-0" style="background: #ffffff; border-radius: 15px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: all 0.3s ease;">
+											<div class="card-body p-0">
+												<div class="product-image-wrapper position-relative" style="height: 210px; overflow: hidden;">
+													<img alt="" th:src="@{'/img/product_img/'+${p.image}}"
+														 style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease;">
+													<div class="product-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); opacity: 0; transition: opacity 0.3s ease;"></div>
+												</div>
+												<div class="p-3">
+													<h5 class="product-title mb-2" style="font-size: 1.1rem; font-weight: 600; color: #2c3e50; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
+														[[${p.title}]]
+													</h5>
+													<div class="price-info mb-3">
+														<div class="d-flex align-items-center justify-content-between">
+															<div>
+																<span class="fw-bold" style="font-size: 1.2rem; color: #000;">[[${p.formattedDiscountPrice}]] VND</span>
+																<div class="text-secondary" style="font-size: 0.9rem;">
+																	<span class="text-decoration-line-through">[[${p.formattedPrice}]]</span>
+																	<span class="text-success ms-2">-[[${p.discount}]]%off</span>
+																</div>
+															</div>
+														</div>
+													</div>
 													<a th:href="@{'/product/'+${p.id}}"
-														class="btn btn-primary col-md-6 offset-md-3">View
-														Details</a>
+														 class="btn btn-primary w-100"
+														 style="background-color: #1a73e8; border: none; padding: 0.5rem 1rem; font-weight: 500; letter-spacing: 0.5px;">
+														View Details
+													</a>
 												</div>
 											</div>
 										</div>
 									</div>
 								</th:block>
 								<th:block th:unless="${productsSize>0}">
-									<p class="fs-4 text-center mt-4 text-danger">Product not
-										available</p>
+									<div class="col-12 text-center py-5">
+										<i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+										<p class="fs-4 text-muted">No products available</p>
+									</div>
 								</th:block>
 							</div>
-
 						</div>
 					</div>
 					<!-- Start Pagination -->
@@ -117,24 +136,49 @@
 		</div>
 
 	</section>
-	<!-- Thêm mã JavaScript vào cu?i trang -->
+	<!-- Th?m m? JavaScript v?o cu?i trang -->
 	<script>
-		// Hàm ??nh d?ng ti?n t? Vi?t Nam
+		// H?m ??nh d?ng ti?n t? Vi?t Nam
 		function formatCurrency(amount) {
 			return parseFloat(amount).toLocaleString('vi-VN') + ' VND';
 		}
 
-		// ??nh d?ng giá tr? discountPrice
+		// ??nh d?ng gi? tr? discountPrice
 		document.querySelectorAll('.discountPrice').forEach(function(element) {
 			let price = element.innerText.replace(' VND', '').trim();  // Lo?i b? ' VND'
 			element.innerText = formatCurrency(price);
 		});
 
-		// ??nh d?ng giá tr? price
+		// ??nh d?ng gi? tr? price
 		document.querySelectorAll('.price').forEach(function(element) {
 			let price = element.innerText.replace(' VND', '').trim();  // Lo?i b? ' VND'
 			element.innerText = formatCurrency(price);
 		});
 	</script>
+
+	<style>
+		.product-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 8px 16px rgba(0,0,0,0.15) !important;
+		}
+		
+		.product-card:hover .product-image-wrapper img {
+			transform: scale(1.05);
+		}
+		
+		.product-card:hover .product-overlay {
+			opacity: 1;
+		}
+		
+		.product-title:hover {
+			color: #3498db !important;
+		}
+		
+		.btn-primary:hover {
+			background-color: #1557b0 !important;
+			transform: translateY(-2px);
+		}
+	</style>
+
 </body>
 </html>
