@@ -155,8 +155,8 @@ $orders.validate({
 			},
 
 			city: {
-				required: true,
-				space: true
+				required: true
+
 
 			},
 			state: {

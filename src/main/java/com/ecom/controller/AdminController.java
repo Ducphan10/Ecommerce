@@ -238,7 +238,7 @@ public class AdminController {
 //		} else {
 //			products = productService.getAllProducts();
 //		}
-//		m.addAttribute("products", products);
+//		m.addAttribute("products", products)
 
 		Page<Product> page = null;
 		if (ch != null && ch.length() > 0) {
