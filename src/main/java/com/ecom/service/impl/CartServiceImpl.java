@@ -29,9 +29,13 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public Cart saveCart(Integer productId, Integer userId) {
-
 		UserDtls userDtls = userRepository.findById(userId).get();
 		Product product = productRepository.findById(productId).get();
+
+		// Check if product is out of stock
+		if (product.getStock() <= 0) {
+			throw new RuntimeException("Sản phẩm đã hết hàng");
+		}
 
 		Cart cartStatus = cartRepository.findByProductIdAndUserId(productId, userId);
 
@@ -44,6 +48,11 @@ public class CartServiceImpl implements CartService {
 			cart.setQuantity(1);
 			cart.setTotalPrice(1 * product.getDiscountPrice());
 		} else {
+			// Check if adding one more item exceeds stock
+			if (cartStatus.getQuantity() >= product.getStock()) {
+				throw new RuntimeException("Số lượng sản phẩm vượt quá tồn kho. Số lượng tồn kho hiện tại: " + product.getStock());
+			}
+			
 			cart = cartStatus;
 			cart.setQuantity(cart.getQuantity() + 1);
 			cart.setTotalPrice(cart.getQuantity() * cart.getProduct().getDiscountPrice());
@@ -78,7 +87,6 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public void updateQuantity(String sy, Integer cid) {
-
 		Cart cart = cartRepository.findById(cid).get();
 		int updateQuantity;
 
@@ -93,11 +101,24 @@ public class CartServiceImpl implements CartService {
 			}
 
 		} else {
+			// Check if increasing quantity exceeds available stock
+			Product product = cart.getProduct();
+			if (cart.getQuantity() >= product.getStock()) {
+				throw new RuntimeException("Số lượng sản phẩm vượt quá tồn kho. Số lượng tồn kho hiện tại: " + product.getStock());
+			}
+			
 			updateQuantity = cart.getQuantity() + 1;
 			cart.setQuantity(updateQuantity);
 			cartRepository.save(cart);
 		}
+	}
 
+	@Override
+	public void deleteCart(Integer cid) {
+		Cart cart = cartRepository.findById(cid).orElse(null);
+		if (cart != null) {
+			cartRepository.delete(cart);
+		}
 	}
 
 }

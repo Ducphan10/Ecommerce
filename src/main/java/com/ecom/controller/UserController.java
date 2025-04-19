@@ -74,12 +74,15 @@ public class UserController {
 
 	@GetMapping("/addCart")
 	public String addToCart(@RequestParam Integer pid, @RequestParam Integer uid, HttpSession session) {
-		Cart saveCart = cartService.saveCart(pid, uid);
-
-		if (ObjectUtils.isEmpty(saveCart)) {
-			session.setAttribute("errorMsg", "Product add to cart failed");
-		} else {
-			session.setAttribute("succMsg", "Product added to cart");
+		try {
+			Cart saveCart = cartService.saveCart(pid, uid);
+			if (ObjectUtils.isEmpty(saveCart)) {
+				session.setAttribute("errorMsg", "Thêm sản phẩm vào giỏ hàng thất bại");
+			} else {
+				session.setAttribute("succMsg", "Đã thêm sản phẩm vào giỏ hàng");
+			}
+		} catch (RuntimeException e) {
+			session.setAttribute("errorMsg", e.getMessage());
 		}
 		return "redirect:/product/" + pid;
 	}
@@ -129,8 +132,12 @@ public class UserController {
 	}
 
 	@GetMapping("/cartQuantityUpdate")
-	public String updateCartQuantity(@RequestParam String sy, @RequestParam Integer cid) {
-		cartService.updateQuantity(sy, cid);
+	public String updateCartQuantity(@RequestParam String sy, @RequestParam Integer cid, HttpSession session) {
+		try {
+			cartService.updateQuantity(sy, cid);
+		} catch (RuntimeException e) {
+			session.setAttribute("errorMsg", e.getMessage());
+		}
 		return "redirect:/user/cart";
 	}
 
@@ -217,16 +224,20 @@ public class UserController {
 
 
 	@PostMapping("/save-order")
-	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) throws Exception {
-		// System.out.println(request);
-		UserDtls user = getLoggedInUserDetails(p);
-		orderService.saveOrder(user.getId(), request);
+	public String saveOrder(@ModelAttribute OrderRequest request, Principal p, HttpSession session) throws Exception {
+		try {
+			UserDtls user = getLoggedInUserDetails(p);
+			orderService.saveOrder(user.getId(), request);
 
-		if(Objects.equals(request.getPaymentType(), "ONLINE")) {
-			return "redirect:/user/checkout/vnpay";
+			if(Objects.equals(request.getPaymentType(), "ONLINE")) {
+				return "redirect:/user/checkout/vnpay";
+			}
+
+			return "redirect:/user/success";
+		} catch (RuntimeException e) {
+			session.setAttribute("errorMsg", e.getMessage());
+			return "redirect:/user/orders";
 		}
-
-		return "redirect:/user/success";
 	}
 
 	@GetMapping("/success")
@@ -332,5 +343,11 @@ public class UserController {
 		}
 
 		return "redirect:/user/profile";
+	}
+
+	@GetMapping("/deleteCart")
+	public String deleteCart(@RequestParam Integer cid) {
+		cartService.deleteCart(cid);
+		return "redirect:/user/cart";
 	}
 }

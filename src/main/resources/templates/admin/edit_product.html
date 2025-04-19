@@ -8,6 +8,8 @@
 <body>
 	<section>
 		<div class="container p-5 mt-3">
+			<a href="/admin/products" class="text-decoration-none" ><i
+					class="fa-solid fa-arrow-left" style="margin-top: 20px;"></i> Back</a>
 			<div class="row">
 				<div class="col-md-8 offset-md-2">
 					<div class="card card-sh">
@@ -49,7 +51,8 @@
 									</div>
 									<div class="mb-3 col">
 										<label>Enter Price</label>
-										<input type="number" name="price" th:value="${product.price}" class="form-control" step="0.01">
+										<input type="text" class="form-control" id="priceInput" th:value="${#numbers.formatInteger(product.price, 0, 'COMMA')}">
+										<input type="hidden" name="price" id="actualPrice" th:value="${product.price}">
 									</div>
 								</div>
 
@@ -60,7 +63,7 @@
 									</div>
 									<div class="mb-3 col">
 										<label>Discount Price</label>
-										<!-- Hi?n th? giá ?ã ???c ??nh d?ng (formatted) -->
+										<!-- Hi?n th? giï¿½ ?ï¿½ ???c ??nh d?ng (formatted) -->
 										<input type="text" readonly th:value="${product.formattedDiscountPrice}" class="form-control">
 									</div>
 								</div>
@@ -109,5 +112,31 @@
 			</div>
 		</div>
 	</section>
+	<script th:inline="javascript">
+		document.addEventListener('DOMContentLoaded', function() {
+			const priceInput = document.getElementById('priceInput');
+			const actualPrice = document.getElementById('actualPrice');
+			
+			// Format number when input loses focus
+			priceInput.addEventListener('blur', function() {
+				let value = this.value.replace(/,/g, '');
+				if (!isNaN(value)) {
+					this.value = Number(value).toLocaleString('en-US');
+					actualPrice.value = value;
+				}
+			});
+			
+			// Remove commas when input gets focus
+			priceInput.addEventListener('focus', function() {
+				this.value = this.value.replace(/,/g, '');
+			});
+
+			// Update hidden input before form submission
+			document.querySelector('form').addEventListener('submit', function() {
+				let value = priceInput.value.replace(/,/g, '');
+				actualPrice.value = value;
+			});
+		});
+	</script>
 </body>
 </html>

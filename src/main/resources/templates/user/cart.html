@@ -32,6 +32,7 @@
 							<th scope="col">Price</th>
 							<th scope="col" class="text-center">Quantity</th>
 							<th scope="col">Total Price</th>
+							<th scope="col">Action</th>
 						</tr>
 						</thead>
 						<tbody>
@@ -41,7 +42,7 @@
 								<img th:src="@{'/img/product_img/'+${cart.product.image}}" width="70px" height="70px">
 							</td>
 							<td>[[${cart.product.title}]]</td>
-							<td> [[${cart.product.formattedDiscountPrice}]]</td> <!-- Hi?n th? gi� ?� ??nh d?ng -->
+							<td> [[${cart.product.formattedDiscountPrice}]]</td> <!-- Hi?n th? gi� ?� ??nh d?ng -->
 							<td class="text-center">
 								<a th:href="@{'/user/cartQuantityUpdate?sy=de&cid='+${cart.id}}">
 									<i class="fa-solid fa-minus"></i>
@@ -50,19 +51,40 @@
 								<a th:href="@{'/user/cartQuantityUpdate?sy=in&cid='+${cart.id}}">
 									<i class="fa-solid fa-plus"></i>
 								</a>
+								<br>
+								<small class="text-muted">Tồn kho: [[${cart.product.stock}]]</small>
 							</td>
-							<td> [[${cart.formattedTotalPrice}]]</td> <!-- Hi?n th? t?ng gi� ?� ??nh d?ng -->
+							<td> [[${cart.formattedTotalPrice}]]</td> <!-- Hi?n th? t?ng gi� ?� ??nh d?ng -->
+							<td>
+								<a th:href="@{'/user/deleteCart?cid='+${cart.id}}" class="btn btn-danger btn-sm">
+									<i class="fa-solid fa-trash"></i> Delete
+								</a>
+							</td>
 						</tr>
 						<tr>
 							<td colspan="4"></td>
 							<td class="fw-bold">Total Price</td>
-							<td class="fw-bold"> [[${formattedTotalOrderPrice}]] VND</td> <!-- Hi?n th? t?ng gi? h�ng ?� ??nh d?ng -->
+							<td class="fw-bold"> [[${formattedTotalOrderPrice}]] VND</td> <!-- Hi?n th? t?ng gi? h�ng ?� ??nh d?ng -->
 						</tr>
 						</tbody>
 
 					</table>
 					<div class="text-center">
-						<a href="/user/orders" class="btn btn-warning"> Proceed Payment</a>
+						<th:block th:if="${carts.size() > 0}">
+							<th:block th:if="${carts.?[product.stock <= 0].size() > 0}">
+								<div class="alert alert-danger" role="alert">
+									Một số sản phẩm trong giỏ hàng đã hết hàng. Vui lòng xóa sản phẩm hết hàng trước khi thanh toán.
+								</div>
+							</th:block>
+							<th:block th:unless="${carts.?[product.stock <= 0].size() > 0}">
+								<a href="/user/orders" class="btn btn-warning">Proceed Payment</a>
+							</th:block>
+						</th:block>
+						<th:block th:unless="${carts.size() > 0}">
+							<div class="alert alert-info" role="alert">
+								Giỏ hàng của bạn đang trống.
+							</div>
+						</th:block>
 					</div>
 				</div>
 			</div>

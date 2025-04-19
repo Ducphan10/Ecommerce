@@ -22,6 +22,8 @@ import com.ecom.repository.ProductOrderRepository;
 import com.ecom.service.OrderService;
 import com.ecom.util.CommonUtil;
 import com.ecom.util.OrderStatus;
+import com.ecom.model.Product;
+import com.ecom.repository.ProductRepository;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -35,12 +37,19 @@ public class OrderServiceImpl implements OrderService {
 	@Autowired
 	private CommonUtil commonUtil;
 
+	@Autowired
+	private ProductRepository productRepository;
+
 	@Override
 	public void saveOrder(Integer userid, OrderRequest orderRequest) throws Exception {
-
 		List<Cart> carts = cartRepository.findByUserId(userid);
 
 		for (Cart cart : carts) {
+			// Check if product is still in stock
+			Product product = cart.getProduct();
+			if (product.getStock() < cart.getQuantity()) {
+				throw new RuntimeException("Sản phẩm " + product.getTitle() + " không đủ số lượng tồn kho. Số lượng còn lại: " + product.getStock());
+			}
 
 			ProductOrder order = new ProductOrder();
 
@@ -68,6 +77,10 @@ public class OrderServiceImpl implements OrderService {
 
 			order.setOrderAddress(address);
 
+			// Update product stock immediately
+			product.setStock(product.getStock() - cart.getQuantity());
+			productRepository.save(product);
+
 			ProductOrder saveOrder = orderRepository.save(order);
 			commonUtil.sendMailForProductOrder(saveOrder, "success");
 		}
@@ -85,6 +98,16 @@ public class OrderServiceImpl implements OrderService {
 		if (findById.isPresent()) {
 			ProductOrder productOrder = findById.get();
 			productOrder.setStatus(status);
+			
+			// Decrease product stock when order is delivered
+			if (status.equals("Delivered")) {
+				Product product = productOrder.getProduct();
+				int currentStock = product.getStock();
+				int orderedQuantity = productOrder.getQuantity();
+				product.setStock(currentStock - orderedQuantity);
+				productRepository.save(product);
+			}
+			
 			ProductOrder updateOrder = orderRepository.save(productOrder);
 			return updateOrder;
 		}
